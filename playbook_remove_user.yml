@@ -1,0 +1,16 @@
+---
+- name: " Remove User"
+  hosts: all
+  tasks:
+    - name:  "remove user1'"
+      user:
+        name: user1
+        state: absent
+        remove: yes
+    - name: "remove user2"
+      user:
+        name: user2
+        state: absent
+        remove: yes
+...
+
