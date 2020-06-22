@@ -1,0 +1,32 @@
+---
+- name: "[APACHE]"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "[APACHE] - Update Packages apt-get update"
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+    - name: "[APACHE] - Install Apache"
+      apt:
+        name: apache2 
+        state: latest
+
+    - name: "[APACHE] - Enabled mod_rewrite" 
+      apache2_module: name=rewrite state=present
+      notify:
+        - restart apache2
+
+    - name: "[APACHE] - Conf Apache2 listen on port 8081"
+      lineinfile: dest=/etc/apache2/ports.conf regexp="^Listen 80" line="Listen 8081" state=present
+      notify:
+        - restart apache2
+
+    - name: "[APACHE] - Conf VirtualHost on port 8081"
+      lineinfile: dest=/etc/apache2/sites-available/000-default.conf regexp="^<VirtualHost \*:80>" line="<VirtualHost *:8081>" state=present
+      notify:
+        - restart apache2
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
+
