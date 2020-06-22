@@ -1,6 +1,7 @@
 ---
 - name: " Remove User"
   hosts: all
+  become: yes
   tasks:
     - name:  "remove user1'"
       user:
