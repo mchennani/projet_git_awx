@@ -1,0 +1,42 @@
+---
+- name: "[LIGHTHTTPD]"
+  hosts: all 
+  become: yes 
+  vars:
+    myhomepage: '<html><h1>Apache installed using Ansible</h1></html>'
+  tasks:
+    - name: "[LIGHTHTTPD] - Installing EPEL yum Repository"
+      action: yum name=epel-release state=installed
+
+    - name: "[LIGHTHTTPD] - Installing Lighttpd Server"
+      action: yum name=lighttpd state=installed
+
+    - name: "[LIGHTHTTPD] - Configure Lighttpd Server"
+      replace:
+        path: /etc/lighttpd/lighttpd.conf
+        regexp: 'server.use-ipv6 = "enable"'
+        replace: 'server.use-ipv6 = "disable"'
+        backup: yes
+
+    - name: "[LIGHTHTTPD] - Create Index.html File."
+      copy:
+        dest: /var/www/lighttpd/index.html
+        content: '{{ myhomepage }}'
+        backup: yes
+
+    - name: "[LIGHTHTTPD] - Allow HTTPS Service in Linux Firewall"
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+
+    - name: Restart Lighttpd service
+      service:
+        name: lighttpd
+        enabled: yes
+        state: restarted
+
+    - name: Restart Firewalld service
+      service:
+        name: firewalld
+        state: restarted
