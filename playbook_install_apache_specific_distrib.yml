@@ -5,7 +5,7 @@
   tasks:
     - name: Install apache - ( Debian  or Ubuntu - CentOs or  RedHat)
       apt: 
-      name: {{ item }} 
+      name: "{{ item }}" 
       state: latest
       with_items:
         - apache2
@@ -13,7 +13,7 @@
 
     - name: Install httpd - CentOS
       yum: 
-      name: {{ item }} 
+      name: "{{ item }}" 
       state: latest
       with_items:
         - httpd
