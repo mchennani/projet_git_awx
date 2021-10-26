@@ -9,7 +9,7 @@
         comment: UserI 
         uid: 10004
         group: admin
-        append: yes
+        
 
     - name: "Add the user 'user2' with a bash shell, appending the group 'admins' and 'developers' to the user's groups"
       user:
